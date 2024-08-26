@@ -1,0 +1,25 @@
+# Unity specific
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+
+# VSCode specific
+.vscode/
+
+# Other files
+*.sln
+*.csproj
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db

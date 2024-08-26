@@ -1,0 +1,8 @@
+# Unity files
+*.asset text eol=lf
+*.json text eol=lf
+*.txt text eol=lf
+
+# Ensure other text files have LF line endings
+*.cs text eol=lf
+*.shader text eol=lf
