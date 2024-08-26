@@ -1,31 +1,39 @@
 using UnityEngine;
 using System.IO;
 using Newtonsoft.Json.Linq;
+
 public class PlayerMovement : MonoBehaviour
 {
-    public float speed = 3f;
+    public float speed = 5f;
+
     void Start()
     {
-        string json = File.ReadAllText(Application.dataPath + "/doofus_diary.json");
+        string json = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "game_data.json"));
         JObject playerData = JObject.Parse(json);
         speed = (float)playerData["player_data"]["speed"];
     }
+
     void Update()
     {
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
         Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
         transform.Translate(movement * speed * Time.deltaTime);
-        if (transform.position.y < -10)
-{
-    FindObjectOfType<GameManager>().GameOver(FindObjectOfType<ScoreManager>().GetScore());
-}
+
+        // Example game over condition: player falls below a certain height
+        if (transform.position.y < -1)
+        {
+            GameManager.Instance.GameOver(GameManager.Instance.GetScore());
+        }
     }
+
     void OnCollisionEnter(Collision collision)
 {
     if (collision.gameObject.CompareTag("Pulpit"))
     {
-        FindObjectOfType<ScoreManager>().IncrementScore();
+        // Call ScoreManager to increment score
+        ScoreManager.Instance.IncrementScore();
     }
 }
+
 }

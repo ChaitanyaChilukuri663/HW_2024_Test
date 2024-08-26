@@ -3,42 +3,40 @@ using TMPro;
 
 public class ScoreManager : MonoBehaviour
 {
-    public TextMeshProUGUI scoreText; // Reference to the UI Text component
+    public static ScoreManager Instance { get; private set; }
+    public TextMeshProUGUI scoreText; // Drag the ScoreText object here in Unity
+
     private int score = 0;
 
-    void Start()
+    void Awake()
     {
-        // Ensure scoreText is assigned
-        if (scoreText == null)
+        if (Instance == null)
         {
-            Debug.LogError("ScoreText reference is missing in ScoreManager. Please assign it in the Inspector.");
-            return;
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
-
-        UpdateScore();
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
     }
 
     public void IncrementScore()
     {
-        score++;
-        UpdateScore();
-    }
-
-    void UpdateScore()
-    {
-        // Check if scoreText is assigned before updating
-        if (scoreText != null)
-        {
-            scoreText.text = "Score: " + score;
-        }
-        else
-        {
-            Debug.LogError("ScoreText reference is missing in ScoreManager. Unable to update score.");
-        }
+        score += 1; // Increment score by 1 or any other value as needed
+        UpdateScoreUI();
     }
 
     public int GetScore()
     {
         return score;
+    }
+
+    private void UpdateScoreUI()
+    {
+        if (scoreText != null)
+        {
+            scoreText.text = "Score: " + score.ToString();
+        }
     }
 }
