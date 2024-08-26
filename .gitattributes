@@ -10,3 +10,9 @@
 * text=auto
 *.sh text eol=lf
 *.bat text eol=crlf
+*.unity text eol=lf
+*.meta text eol=lf
+*.bat text eol=crlf
+*.sh text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
