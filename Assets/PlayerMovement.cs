@@ -16,6 +16,10 @@ public class PlayerMovement : MonoBehaviour
         float moveVertical = Input.GetAxis("Vertical");
         Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
         transform.Translate(movement * speed * Time.deltaTime);
+        if (transform.position.y < -10)
+{
+    FindObjectOfType<GameManager>().GameOver(FindObjectOfType<ScoreManager>().GetScore());
+}
     }
     void OnCollisionEnter(Collision collision)
 {
