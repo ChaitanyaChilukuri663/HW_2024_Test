@@ -16,3 +16,5 @@
 *.sh text eol=lf
 *.md text eol=lf
 *.txt text eol=lf
+* text=auto
+*.cs text eol=lf
