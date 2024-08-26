@@ -6,3 +6,7 @@
 # Ensure other text files have LF line endings
 *.cs text eol=lf
 *.shader text eol=lf
+# Handle line endings
+* text=auto
+*.sh text eol=lf
+*.bat text eol=crlf
