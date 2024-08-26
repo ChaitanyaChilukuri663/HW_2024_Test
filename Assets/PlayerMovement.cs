@@ -17,4 +17,11 @@ public class PlayerMovement : MonoBehaviour
         Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
         transform.Translate(movement * speed * Time.deltaTime);
     }
+    void OnCollisionEnter(Collision collision)
+{
+    if (collision.gameObject.CompareTag("Pulpit"))
+    {
+        FindObjectOfType<ScoreManager>().IncrementScore();
+    }
+}
 }

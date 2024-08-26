@@ -1,12 +1,9 @@
-# Unity files
+
 *.asset text eol=lf
 *.json text eol=lf
 *.txt text eol=lf
-
-# Ensure other text files have LF line endings
 *.cs text eol=lf
 *.shader text eol=lf
-# Handle line endings
 * text=auto
 *.sh text eol=lf
 *.bat text eol=crlf
@@ -18,3 +15,8 @@
 *.txt text eol=lf
 * text=auto
 *.cs text eol=lf
+
+* text=auto
+
+*.cs text eol=lf
+*.prefab text eol=lf
