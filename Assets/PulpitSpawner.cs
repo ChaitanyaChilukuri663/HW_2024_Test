@@ -16,46 +16,46 @@ public class PulpitSpawner : MonoBehaviour
 
     void Start()
     {
-        ReadJSONValues(); 
-        spawnTimer = pulpitSpawnTime; 
-        SpawnInitialPulpits(); 
+        ReadJSONValues();
+        spawnTimer = pulpitSpawnTime;
+        SpawnInitialPulpits();
     }
 
     void Update()
     {
-        spawnTimer -= Time.deltaTime; 
+        spawnTimer -= Time.deltaTime;
 
         if (spawnTimer <= 0)
         {
-            SpawnPulpit(); 
-            spawnTimer = pulpitSpawnTime; 
+            SpawnPulpit();
+            spawnTimer = pulpitSpawnTime;
         }
     }
 
     void SpawnInitialPulpits()
     {
-        Vector3 startPosition = new Vector3(0, 0, 0); 
+        Vector3 startPosition = new Vector3(0, 0, 0);
         Transform firstPulpit = Instantiate(pulpitPrefab, startPosition, Quaternion.identity).transform;
-        activePulpits.Enqueue(firstPulpit); 
+        activePulpits.Enqueue(firstPulpit);
 
-        Vector3 adjacentPosition = startPosition + Vector3.right * spawnDistance; 
+        Vector3 adjacentPosition = startPosition + Vector3.right * spawnDistance;
         Transform secondPulpit = Instantiate(pulpitPrefab, adjacentPosition, Quaternion.identity).transform;
-        activePulpits.Enqueue(secondPulpit); 
+        activePulpits.Enqueue(secondPulpit);
 
         SetPulpitDestroyTimers(firstPulpit);
         SetPulpitDestroyTimers(secondPulpit);
     }
 
-    void SpawnPulpit()
+     void SpawnPulpit()
     {
-        if (activePulpits.Count == 2) 
+        if (activePulpits.Count == 2)
         {
-            DestroyOldestPulpit(); 
+            DestroyOldestPulpit();
         }
 
-        Transform currentPulpitTransform = activePulpits.Peek(); 
+        Transform currentPulpitTransform = activePulpits.Peek();
 
-        Vector3[] spawnDirections = new Vector3[] 
+        Vector3[] spawnDirections = new Vector3[]
         {
             Vector3.right * spawnDistance,
             Vector3.left * spawnDistance,
@@ -63,73 +63,88 @@ public class PulpitSpawner : MonoBehaviour
             Vector3.back * spawnDistance
         };
 
-        
         int randomIndex = Random.Range(0, spawnDirections.Length);
         Vector3 spawnPosition = currentPulpitTransform.position + spawnDirections[randomIndex];
 
-    
         if (!IsPositionOccupied(spawnPosition))
         {
             Transform newPulpit = Instantiate(pulpitPrefab, spawnPosition, Quaternion.identity).transform;
-            activePulpits.Enqueue(newPulpit); 
+            activePulpits.Enqueue(newPulpit);
             SetPulpitDestroyTimers(newPulpit);
+
+            UpdateOldestPulpitTimer();
         }
     }
+
 
     bool IsPositionOccupied(Vector3 position)
     {
         foreach (var pulpit in activePulpits)
         {
-            if (pulpit != null && Vector3.Distance(pulpit.position, position) < 0.1f)
-                return true; 
+            if (pulpit != null && Vector3.Distance(pulpit.position, position) < spawnDistance)
+                return true;
         }
-        return false; 
+        return false;
     }
+
 
     void DestroyOldestPulpit()
     {
         if (activePulpits.Count > 0)
         {
-            Transform oldestPulpit = activePulpits.Dequeue(); 
+            Transform oldestPulpit = activePulpits.Dequeue();
             if (oldestPulpit != null)
             {
-                Destroy(oldestPulpit.gameObject); 
+                Destroy(oldestPulpit.gameObject);
             }
         }
     }
 
     void SetPulpitDestroyTimers(Transform pulpit)
     {
-        float destroyTime = Random.Range(minPulpitDestroyTime, maxPulpitDestroyTime); 
-        StartCoroutine(DestroyPulpitAfterTime(pulpit, destroyTime)); 
+        float destroyTime = Random.Range(minPulpitDestroyTime, maxPulpitDestroyTime);
+        StartCoroutine(DestroyPulpitAfterTime(pulpit, destroyTime));
     }
 
     System.Collections.IEnumerator DestroyPulpitAfterTime(Transform pulpit, float destroyTime)
     {
         yield return new WaitForSeconds(destroyTime);
 
-        if (pulpit != null) 
+        if (pulpit != null)
         {
-            Destroy(pulpit.gameObject); 
-            if (activePulpits.Count > 0) activePulpits.Dequeue(); 
+            Destroy(pulpit.gameObject);
+            if (activePulpits.Count > 0) activePulpits.Dequeue();
+        }
+    }
+
+    void UpdateOldestPulpitTimer()
+    {
+        if (activePulpits.Count > 0)
+        {
+            Transform oldestPulpit = activePulpits.Peek();
+            PulpitTimer pulpitTimer = oldestPulpit.GetComponent<PulpitTimer>();
+            if (pulpitTimer != null)
+            {
+                pulpitTimer.enabled = true;
+            }
         }
     }
 
     void ReadJSONValues()
     {
-        string filePath = Path.Combine(Application.streamingAssetsPath, "game_data.json"); 
-        if (File.Exists(filePath)) 
+        string filePath = Path.Combine(Application.streamingAssetsPath, "game_data.json");
+        if (File.Exists(filePath))
         {
             string json = File.ReadAllText(filePath);
-            JObject data = JObject.Parse(json); 
+            JObject data = JObject.Parse(json);
 
-            minPulpitDestroyTime = (float)data["pulpit_data"]["min_pulpit_destroy_time"]; 
-            maxPulpitDestroyTime = (float)data["pulpit_data"]["max_pulpit_destroy_time"]; 
-            pulpitSpawnTime = (float)data["pulpit_data"]["pulpit_spawn_time"]; 
+            minPulpitDestroyTime = (float)data["pulpit_data"]["min_pulpit_destroy_time"];
+            maxPulpitDestroyTime = (float)data["pulpit_data"]["max_pulpit_destroy_time"];
+            pulpitSpawnTime = (float)data["pulpit_data"]["pulpit_spawn_time"];
         }
         else
         {
-            Debug.LogError("JSON file not found at: " + filePath); 
+            Debug.LogError("JSON file not found at: " + filePath);
         }
     }
 }

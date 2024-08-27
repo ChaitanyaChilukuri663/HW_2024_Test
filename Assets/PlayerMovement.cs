@@ -27,12 +27,10 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider other)
-{
-    if (other.CompareTag("Pulpit"))
     {
-        
-        ScoreManager.instance.IncreaseScore(1); 
+        if (other.CompareTag("Pulpit"))
+        {
+            GameManager.Instance.AddScore(1); 
+        }
     }
-}
-
 }

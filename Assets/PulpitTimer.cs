@@ -1,21 +1,25 @@
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 
 public class PulpitTimer : MonoBehaviour
 {
     public float timeToLive = 5.0f;  
-    private float countdown;
-    private Text timerText;  
+    private float countdown;  
+    private TextMeshProUGUI timerText;  
 
     void Start()
     {
         countdown = timeToLive;  
-        timerText = GetComponentInChildren<Text>();  
+        timerText = GetComponentInChildren<TextMeshProUGUI>();  
+        if (timerText == null)
+        {
+            Debug.LogError("TimerText component not found in children of Pulpit prefab.");
+        }
     }
 
     void Update()
     {
-        
+     
         countdown -= Time.deltaTime;
         if (timerText != null)
         {
@@ -24,7 +28,13 @@ public class PulpitTimer : MonoBehaviour
 
         if (countdown <= 0f)
         {
-            Destroy(gameObject);  
+            Destroy(gameObject); 
         }
+    }
+
+    public void SetCountdown(float time)
+    {
+        timeToLive = time;
+        countdown = timeToLive;
     }
 }
