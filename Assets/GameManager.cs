@@ -3,32 +3,32 @@ using TMPro;
 using Newtonsoft.Json.Linq;
 public class GameManager : MonoBehaviour
 {
-    // Singleton instance
+   
     public static GameManager Instance { get; private set; }
 
     public GameObject   
  startScreen;
     public GameObject gameOverScreen;
     public TextMeshProUGUI scoreText;
-    public TextMeshProUGUI gameOverScoreText; // Separate text for game over screen
+    public TextMeshProUGUI gameOverScoreText; 
 
     private bool gameHasStarted = false;
-    private int score = 0; // Variable to track the player's score
+    private int score = 0; 
 
     void Awake()
     {
-        // Check if Instance already exists
+        
         if (Instance == null)
         {
-            Instance = this; // If not, set Instance to this
+            Instance = this; 
         }
         else if (Instance != this)
         {
             Destroy(gameObject);   
- // Enforce singleton pattern, destroy duplicate
+ 
         }
 
-        DontDestroyOnLoad(gameObject); // Optional: Keeps the game manager active across scenes
+        DontDestroyOnLoad(gameObject); 
     }
 
     void Start()
@@ -55,14 +55,13 @@ public class GameManager : MonoBehaviour
         gameOverScoreText.text = "Game Over! Your Score: " + finalScore;
     }
 
-    // Method to increase the score
+   
     public void AddScore(int points)
     {
         score += points;
         UpdateScoreUI();
     }
 
-    // Method to update the score display on the UI
     void UpdateScoreUI()
     {
         if (scoreText != null)
@@ -71,7 +70,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Method to get the current score
     public int GetScore()
     {
         return score;

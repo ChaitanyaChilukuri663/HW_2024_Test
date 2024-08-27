@@ -1,42 +1,38 @@
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour
 {
-    public static ScoreManager Instance { get; private set; }
-    public TextMeshProUGUI scoreText; // Drag the ScoreText object here in Unity
-
-    private int score = 0;
+    public static ScoreManager instance;
+    public Text scoreText;  
+    private int score = 0;  
 
     void Awake()
     {
-        if (Instance == null)
+        if (instance == null)
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
+            instance = this;
         }
-        else if (Instance != this)
+        else if (instance != this)
         {
             Destroy(gameObject);
         }
     }
 
-    public void IncrementScore()
+    void Start()
     {
-        score += 1; // Increment score by 1 or any other value as needed
-        UpdateScoreUI();
+        UpdateScoreText(); 
     }
 
-    public int GetScore()
+   
+    public void IncreaseScore(int amount)
     {
-        return score;
+        score += amount;
+        UpdateScoreText();
     }
 
-    private void UpdateScoreUI()
+    void UpdateScoreText()
     {
-        if (scoreText != null)
-        {
-            scoreText.text = "Score: " + score.ToString();
-        }
+        scoreText.text = "Score: " + score.ToString();
     }
 }

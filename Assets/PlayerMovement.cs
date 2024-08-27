@@ -20,19 +20,18 @@ public class PlayerMovement : MonoBehaviour
         Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
         transform.Translate(movement * speed * Time.deltaTime);
 
-        // Example game over condition: player falls below a certain height
         if (transform.position.y < -1)
         {
             GameManager.Instance.GameOver(GameManager.Instance.GetScore());
         }
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
 {
-    if (collision.gameObject.CompareTag("Pulpit"))
+    if (other.CompareTag("Pulpit"))
     {
-        // Call ScoreManager to increment score
-        ScoreManager.Instance.IncrementScore();
+        
+        ScoreManager.instance.IncreaseScore(1); 
     }
 }
 
